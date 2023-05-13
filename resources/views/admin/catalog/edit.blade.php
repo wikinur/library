@@ -5,9 +5,9 @@
 @section('content')
     <div class="row">
         <div class="col-md-8 offset-2">
-            <div class="card card-primary">
+            <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Quick Example</h3>
+                    <a href="{{ url('/catalogs') }}" class="btn btn-primary btn-sm btn-flat"> Kembali</a>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary btn-flat btn-sm">Submit</button>
                     </div>
                 </form>
             </div>

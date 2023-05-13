@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{ asset('asset/dist/css/adminlte.min.css') }}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('asset/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     @yield('css')
     </head>
     <body class="hold-transition sidebar-mini layout-fixed">
@@ -40,11 +44,9 @@
                             @foreach(over_returnDate() as $notification)
                                 <a href="#" class="dropdown-item">
                                     <i class="fas fa-envelope mr-2"></i> {{ $notification->member->name }} melewati batas waktu <br> {{ $notification->late }} hari
-                                    {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
                                 </a>
                             @endforeach
                             <div class="dropdown-divider"></div>
-                            {{-- <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a> --}}
                         </div>
                     </li>
                     <li class="nav-item">
@@ -62,9 +64,9 @@
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
-                <a href="index3.html" class="brand-link">
-                <img src="{{ asset('asset/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Perpustakaan</span>
+                <a href="#" class="brand-link">
+                    <img src="{{ asset('asset/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">Perpustakaan</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -75,18 +77,6 @@
                         <img src="{{ asset('asset/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
                         </div>
                         <div class="info">
-                        </div>
-                    </div>
-
-                    <!-- SidebarSearch Form -->
-                    <div class="form-inline">
-                        <div class="input-group" data-widget="sidebar-search">
-                            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                            <div class="input-group-append">
-                                <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
 
@@ -178,10 +168,10 @@
             </div>
             <!-- /.content-wrapper -->
             <footer class="main-footer">
-                <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+                <strong>Copyright &copy; 2023 <a href="https://adminlte.io">Perpustakaan.io</a>.</strong>
                 All rights reserved.
                 <div class="float-right d-none d-sm-inline-block">
-                    <b>Version</b> 3.2.0
+                    <b>Version</b> 0.0.0
                 </div>
             </footer>
         </div>
@@ -199,6 +189,11 @@
     <script src="{{ asset ('asset/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- overlayScrollbars -->
     <script src="{{ asset('asset/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="{{ asset('asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('asset/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('asset/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('asset/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('asset/dist/js/adminlte.js') }}"></script>
      <script src="{{ asset('asset/dist/js/vue.min.js') }}"></script>
