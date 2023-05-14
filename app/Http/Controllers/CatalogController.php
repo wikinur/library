@@ -34,8 +34,6 @@ class CatalogController extends Controller
                 'name' => 'required | min: 5',
             ], $messages);
 
-            $this->message($request, ['name.required' => 'Nama Wajib diisi']);
-
             Catalog::create($request->all());
             Session::flash('status', 'success');
             Session::flash('message', 'add new catalog success!!');
@@ -54,14 +52,24 @@ class CatalogController extends Controller
 
     public function update(Request $request, Catalog $catalog)
     {
-        $this->validate($request, [
-            'name' => ['required'],
-        ]);
+        try {
+            $messages = [
+                'required' => ':attribute wajib diisi',
+                'min' => ':attribute harus diisi minimal :min karakter',
+            ];
+            $this->validate($request, [
+                'name' => 'required | min: 5',
+            ], $messages);
 
-        $catalog->update($request->all());
-        if ($catalog) {
+            $this->message($request, ['name.required' => 'Nama Wajib diisi']);
+
+            $catalog->update($request->all());
             Session::flash('status', 'success');
-            Session::flash('message', 'Edit catalog success!!');
+            Session::flash('message', 'add new catalog success!!');
+
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
         }
         return redirect('catalogs');
     }

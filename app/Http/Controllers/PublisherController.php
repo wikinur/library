@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Publisher;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PublisherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('admin.publisher');
@@ -28,66 +27,66 @@ class PublisherController extends Controller
         return $datatables->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // return view('admin.publisher.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $messages = [
+            'required' => ':attribute wajib diisi',
+            'min' => ':attribute harus diisi minimal :min karakter',
+            'max' => ':attribute harus diisi maksimal :max karakter',
+        ];
+
         $this->validate($request, [
             'name' => 'required|unique:publishers',
-            'email' => ['required'],
-            'phone_number' => ['max:12'],
-        ]);
+            'email' => 'required',
+            'phone_number' => 'max:12',
+        ], $messages);
 
-        Publisher::create($request->all());
+        $publisher = Publisher::create($request->all());
+        if ($publisher == 1) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'Add Publisher success!!');
+        } else {
+            Session::flash('gagal', 'error');
+            Session::flash('message', 'Tambah Data gagal');
+        }
         return redirect('publishers');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Publisher $publisher)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Publisher $publisher)
-    {
-        // return view('admin.publisher.edit', compact('publisher'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Publisher $publisher)
     {
-        $this->validate($request, [
-            'name' => ['required'],
-        ]);
+        try {
+            $messages = [
+                'required' => ':attribute wajib diisi',
+                'min' => ':attribute harus diisi minimal :min karakter',
+                'max' => ':attribute harus diisi maksimal :max karakter',
+            ];
 
-        $publisher->update($request->all());
-        return redirect('publishers');
+            $this->validate($request, [
+                'name' => 'required|unique:publishers',
+                'email' => ['required'],
+                'phone_number' => ['max:12'],
+            ], $messages);
+
+            $publisher->update($request->all());
+            Session::flash('status', 'success');
+            Session::flash('message', 'Edit Publisher success!!');
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
+            return redirect('publishers');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Publisher $publisher)
     {
-        $publisher->delete();
-
+        try {
+            $publisher->delete();
+            Session::flash('status', 'success');
+            Session::flash('message', 'Delete catalog success!!');
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
+        }
         return redirect('publishers');
-
     }
 }

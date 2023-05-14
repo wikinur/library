@@ -189,6 +189,7 @@
     <script src="{{ asset ('asset/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- overlayScrollbars -->
     <script src="{{ asset('asset/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('asset/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('asset/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

@@ -37,14 +37,52 @@ var controller = new Vue({
             $("#modal-default").modal();
         },
         deleteData(event, id) {
-            if (confirm("Anda yakin?")) {
-                $(event.target).parents("tr").remove();
-                axios
-                    .post(this.actionUrl + "/" + id, { _method: "DELETE" })
-                    .then((response) => {
-                        alert("Data has been removed");
-                    });
-            }
+            // console.log(id_member);
+            const _this = this;
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger",
+                },
+                buttonsStyling: true,
+            });
+
+            swalWithBootstrapButtons
+                .fire({
+                    title: "Apakah kamu yakin?",
+                    text: "Untuk menghapus data ini...",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus!",
+                    cancelButtonText: "Batal",
+                    reverseButtons: false,
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        $(event.target).parents("tr").remove();
+                        axios
+                            .post(this.actionUrl + "/" + id, {
+                                _method: "DELETE",
+                            })
+                            .then((response) => {
+                                _this.table.ajax.reload();
+                                swalWithBootstrapButtons.fire(
+                                    "Deleted!",
+                                    "Data Berhasil di Hapus.",
+                                    "success"
+                                );
+                            });
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            "Cancelled",
+                            "Hapus Data dibatalkan :)",
+                            "error"
+                        );
+                    }
+                });
         },
         submitForm(event, id) {
             event.preventDefault();
@@ -57,13 +95,17 @@ var controller = new Vue({
                 .then((response) => {
                     $("#modal-default").modal("hide");
                     _this.table.ajax.reload();
+                    Swal.fire("Sukses", "Data Berhasil disimpan", "success");
+                })
+                .catch((err) => {
+                    if (err) {
+                        Swal.fire(
+                            "Gagal",
+                            "Periksa Kembali Data yang Anda masukkan",
+                            "error"
+                        );
+                    }
                 });
         },
     },
 });
-
-Swal.fire(
-                            'Good Joob',
-                            'Data Berhasil disimpan',
-                            'success',
-                        )

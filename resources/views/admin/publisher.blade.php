@@ -16,18 +16,10 @@
             <a href="#" v-on:click="addData()" class="btn btn-primary btn-sm pull-right">Create New publisher</a>
         </div>
         @if(Session::has('status'))
-            <div class="alert alert-success offset-3 my-2" style="width:500px;">
-                {{ Session::get('message') }}
-            </div>
+            <script>Swal.fire('Sukses', '{{ Session::get('message') }}', 'success')</script>
         @endif
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li style="list-style: none;">{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        @if(Session::has('gagal'))
+            <script>Swal.fire('gagal', '{{ Session::get('message') }}', 'error')</script>
         @endif
         <!-- /.card-header -->
         <div class="card-body p-0">
@@ -52,6 +44,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <form :action="actionUrl" method="POST" autocomplete="off" @submit="submitForm($event, data.id)">
+                @csrf
                 <div class="modal-header">
                     <h4 class="modal-title">publisher</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -59,22 +52,21 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                        @csrf
                         <input type="hidden" name="_method" value="PUT" v-if="editStatus">
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter name" :value="data.name" required>
+                                <input type="text" class="form-control" name="name" placeholder="Enter name" :value="data.name">
                             </div>
 
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter email" :value="data.email" required>
+                                <input type="email" class="form-control" name="email" placeholder="Enter email" :value="data.email">
                             </div>
 
                             <div class="form-group">
                                 <label>Phone Number</label>
-                                <input type="text" class="form-control" name="phone number" placeholder="Enter phone number" :value="data.phone_number" required>
+                                <input type="text" class="form-control" name="phone number" placeholder="Enter phone number" :value="data.phone_number">
                             </div>
 
                             <div class="form-group">
@@ -89,11 +81,8 @@
                 </div>
             </form>
           </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
-      <!-- /.modal -->    
 </div>
 @endsection
 
