@@ -6,13 +6,12 @@ use App\Models\Author;
 use App\Models\Book;
 use App\Models\Catalog;
 use App\Models\Publisher;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $publishers = Publisher::all();
@@ -27,54 +26,28 @@ class BookController extends Controller
         return json_encode($books);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
-            'isbn' => ['required'],
-            'title' => ['required'],
-            'year' => ['required'],
-            'publisher_id' => ['required'],
-            'author_id' => ['required'],
-            'catalog_id' => ['required'],
-            'qty' => ['required'],
-            'price' => ['required'],
+            'isbn' => 'required',
+            'title' => 'required',
+            'year' => 'required',
+            'publisher_id' => 'required',
+            'author_id' => 'required',
+            'catalog_id' => 'required',
+            'qty' => 'required',
+            'price' => 'required',
         ]);
 
-        Book::create($request->all());
+        $book = Book::create($request->all());
+        if ($book) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'add buku success!!');
+        }
         return redirect('books');
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Book $book)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Book $book)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Book $book)
     {
         $this->validate($request, [
@@ -88,19 +61,24 @@ class BookController extends Controller
             'price' => ['required'],
         ]);
 
-        $book->update($request->all());
-
+        $book = $book->update($request->all());
+        if ($book) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'Edit book sukses');
+        }
         return redirect('books');
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Book $book)
     {
-        $book->delete();
-
+        try {
+            $book->delete();
+            Session::flash('status', 'success');
+            Session::flash('message', 'Delete catalog success!!');
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
+        }
         return redirect('books');
 
     }

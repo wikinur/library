@@ -75,6 +75,5 @@ class AuthorController extends Controller
             Session::flash('message', $e->getMessage());
         }
         return redirect('publishers');
-
     }
 }

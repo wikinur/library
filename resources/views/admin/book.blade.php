@@ -2,6 +2,10 @@
 
 @section('title', 'Books')
 
+@section('css')
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+@endsection
+
 @section('content')
     <div id="controller">
         <div class="row">
@@ -17,6 +21,18 @@
             <div class="col-md-2">
                 <button class="btn btn-primary" @click="addData()">Create New Book</button>
             </div>
+                @if(Session::has('status'))
+                    <script>Swal.fire('Sukses', '{{ Session::get('message') }}', 'success')</script>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
         </div>
 
     <hr>
@@ -159,10 +175,16 @@
                 },
                 deleteData(id){
                     // console.log(id);
+                    const _this = this;
                     this.actionUrl = '{{ url('books') }}'+'/'+id;
                     if (confirm("Are you sure?")) {
                         axios.post(this.actionUrl, {_method: 'DELETE'}).then(response => {
                             location.reload();
+                            Swal.fire(
+                            "Sukses",
+                            "Hapus data berhasil",
+                            "success"
+                        );
                         });
                     }
                 },
