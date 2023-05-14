@@ -68,17 +68,17 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" class="form-control" name="name" placeholder="Enter name" :value="data.name" required>
+                                <input type="text" class="form-control" name="name" placeholder="Enter name" :value="data.name">
                             </div>
 
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter email" :value="data.email" required>
+                                <input type="email" class="form-control" name="email" placeholder="Enter email" :value="data.email">
                             </div>
 
                             <div class="form-group">
                                 <label>Phone Number</label>
-                                <input type="text" class="form-control" name="phone number" placeholder="Enter phone number" :value="data.phone_number" required>
+                                <input type="text" class="form-control" name="phone number" placeholder="Enter phone number" :value="data.phone_number">
                             </div>
 
                             <div class="form-group">
