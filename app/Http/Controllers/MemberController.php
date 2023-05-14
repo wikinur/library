@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use SebastianBergmann\CodeUnit\Exception;
 
 class MemberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return view('admin.member');
@@ -41,17 +40,6 @@ class MemberController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -61,28 +49,14 @@ class MemberController extends Controller
         ]);
 
         $member = Member::create($request->all());
+        if ($member) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'add new author success!!');
+        }
+
         return redirect('members');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Member $member)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Member $member)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Member $member)
     {
         $this->validate($request, [
@@ -91,18 +65,27 @@ class MemberController extends Controller
             'email' => 'required|email|max:64',
             'phone_number' => 'required|max:14',
             'address' => 'required',
-
         ]);
 
         $member->update($request->all());
+        if ($member) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'add new author success!!');
+        }
+
         return redirect('members');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Member $member)
     {
+        try {
+            $member->delete();
+            Session::flash('status', 'success');
+            Session::flash('message', 'Delete catalog success!!');
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
+        }
         $member->delete();
     }
 }
