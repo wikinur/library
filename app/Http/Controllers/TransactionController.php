@@ -6,24 +6,23 @@ use App\Models\Book;
 use App\Models\Member;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // $listDate = Transaction::select('date_start')->orderby('date_start', 'desc')->distinct()->get();
-        // return view('admin.transaction.index', compact('listDate'));
-        if (auth()->user()->role('admin')) {
-            $listDate = Transaction::select('date_start')->orderby('date_start', 'desc')->distinct()->get();
-            return view('admin.transaction.index', compact('listDate'));
-        } else {
-            return abort('403');
-        }
+        $listDate = Transaction::select('date_start')->orderby('date_start', 'desc')->distinct()->get();
+        return view('admin.transaction.index', compact('listDate'));
+        // if (auth()->user()->can('index transaction')) {
+        //     $listDate = Transaction::select('date_start')->orderby('date_start', 'desc')->distinct()->get();
+        //     return view('admin.transaction.index', compact('listDate'));
+        // } else {
+        //     return abort('403');
+        // }
     }
 
     public function api(Request $request)
@@ -75,9 +74,6 @@ class TransactionController extends Controller
         return $datatables->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $member = Member::select('id', 'name')->orderby('name', 'asc')->get();
@@ -85,9 +81,6 @@ class TransactionController extends Controller
         return view('admin.transaction.create', ['members' => $member, 'books' => $book]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $attributes = request()->validate(
@@ -114,20 +107,17 @@ class TransactionController extends Controller
 
             Book::where('id', $book_id)->decrement('qty', 1);
         }
+        Session::flash('status', 'success');
+        Session::flash('message', 'add new transaction success!!');
+
         return redirect('transactions');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Transaction $transaction)
     {
         return view('admin.transaction.detail', compact('transaction'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Transaction $transaction)
     {
         $members = Member::select('id', 'name')->orderby('name', 'asc')->get();
@@ -137,9 +127,6 @@ class TransactionController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Transaction $transaction)
     {
         $oldTransactionDetails = TransactionDetail::select('id', 'book_id')->where('transaction_id', $transaction->id)->get();
@@ -203,29 +190,35 @@ class TransactionController extends Controller
                 }
             }
         }
+        Session::flash('status', 'success');
+        Session::flash('message', 'edit success!!');
 
         return redirect('transactions');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Transaction $transaction)
     {
-        $transactionDetails = TransactionDetail::where('transaction_id', '=', $transaction->id)->get();
+        try {
+            $transactionDetails = TransactionDetail::where('transaction_id', '=', $transaction->id)->get();
 
-        if ($transaction->status == 1) {
+            if ($transaction->status == 1) {
+                $transaction->delete();
+                foreach ($transactionDetails as $transactionDetail) {
+                    TransactionDetail::where('id', $transactionDetail->id)->delete();
+                }
+            } else {
+                foreach ($transactionDetails as $transactionDetail) {
+                    TransactionDetail::where('id', $transactionDetail->id)->delete();
+                    Book::where('id', $transactionDetail->book_id)->increment('qty', 1);
+                }
+            }
             $transaction->delete();
-            foreach ($transactionDetails as $transactionDetail) {
-                TransactionDetail::where('id', $transactionDetail->id)->delete();
-            }
-        } else {
-            foreach ($transactionDetails as $transactionDetail) {
-                TransactionDetail::where('id', $transactionDetail->id)->delete();
-                Book::where('id', $transactionDetail->book_id)->increment('qty', 1);
-            }
+            Session::flash('status', 'success');
+            Session::flash('message', 'Delete transactions success!!');
+        } catch (Exception $e) {
+            Session::flash('gagal', 'error');
+            Session::flash('message', $e->getMessage());
         }
-        $transaction->delete();
 
         return redirect('/transactions');
     }

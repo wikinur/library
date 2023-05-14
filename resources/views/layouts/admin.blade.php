@@ -125,12 +125,6 @@
                                     <p>Transaction</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('transactionDetails') }}" class="nav-link {{ request()->is('transactionDetails') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-dollar-sign"></i>
-                                    <p>Transaction Detail</p>
-                                </a>
-                            </li>
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->

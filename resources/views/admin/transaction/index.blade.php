@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 @endsection
 
 @section('content')
 
 {{-- @can('index transaction') --}}
-{{-- @role('admin') --}}
+@role('admin')
 <div id="controller">
             <div class="card p-3">
                 <div class="card-header mb-3 d-flex">
@@ -30,6 +31,18 @@
                         @endforeach
                     </select>
                 </div>
+                @if(Session::has('status'))
+                    <script>Swal.fire('Sukses', '{{ Session::get('message') }}', 'success')</script>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <!-- /.card-header -->
                 <div class="card-body p-0">
                     <table id="datatable" class="table table-striped table-bordered">
@@ -49,7 +62,7 @@
                 </div>
             </div>
 </div>
-{{-- @endrole --}}
+@endrole
 {{-- @endcan --}}
 @endsection
 

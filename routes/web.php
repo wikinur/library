@@ -8,7 +8,6 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\TransactionDetailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -57,8 +56,6 @@ Route::get('/api/members', [MemberController::class, 'api']);
 // Route::get('/transactions', [TransactionController::class, 'index']);
 Route::resource('/transactions', TransactionController::class);
 Route::get('/api/transactions', [TransactionController::class, 'api']);
-
-Route::get('/transactionDetails', [TransactionDetailController::class, 'index']);
 
 // Spatie
 Route::get('test_spatie', 'App\Http\Controllers\AdminController@test_spatie');
